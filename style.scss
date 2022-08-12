@@ -1,0 +1,151 @@
+@import './reset';
+@import './variable';
+
+@mixin desktop {
+    @media screen and (min-width: $desktop) {
+        @content;
+    }
+}
+
+body{
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    color: $black;
+}
+
+.title{
+    font-size: 1.7em;
+    vertical-align: middle;
+    text-transform: capitalize;
+}
+
+.box{
+    font-size: 1em;
+    padding: 0 1em 0 1em;
+    text-indent: 10px;
+    height: 50px;
+    border: 1.5px solid $smoke;
+    border-radius: 0.2em;
+    &.submitbox{
+        background-color: $blue;
+        color: $white;
+        text-indent: 0;
+        border: none;
+        text-transform: lowercase;
+
+        &.warn{
+            background-color: $red;
+            text-transform: lowercase;
+        }
+    }
+    &::placeholder{
+        font-size: 1em;
+        text-transform: lowercase;
+        color: $smoke;
+    }
+    &:focus{
+        outline-width: 0;
+    }
+}
+
+
+.books{
+    padding: 1.5em 1em 1em 1em;
+    margin: 0 auto 1em auto;
+    border: 1px solid $smoke;
+    border-radius: 0.2em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    @include desktop{
+        padding: 1em;
+        margin: 0 auto 0.5em auto;
+    }
+    h3{
+        font-size: 1.2em;
+        vertical-align: middle;
+        text-transform: capitalize;
+        @include desktop{
+            font-size: 1.4em;
+        }
+    }
+}
+
+.search{
+    width: calc(90% - 2em);
+    margin: 2em auto;
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    position: relative;
+    @include desktop{
+        margin: 3em auto;
+        width: 40%;
+    }
+    .box{
+        text-indent: 40px;
+        width: 100%;
+    }
+    .icon{
+        position: absolute;
+        left: 10px;
+        width: 30px;
+        height: 30px;
+        aspect-ratio: 1;
+    }
+}
+
+.middle{
+    width: 90%;
+    margin: 1em auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    @include desktop{
+        margin: 5em auto;
+        flex-direction: row;
+        gap: 2em;
+        width: 80%;
+        justify-content: space-around;
+    }
+    .input{
+        width: 100%;
+        padding: 1em;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        @include desktop{
+            width: 30%;
+        }
+        .formGroup{
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+    }
+    .notRead{
+        padding: 1em;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        @include desktop{
+            width: 35%;
+        }
+    }
+    .doneRead{
+        width: 100%;
+        padding: 1em;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        @include desktop{
+            width: 35%;
+        }
+        .buttonGroup{
+            display: flex;
+            flex-direction: column;
+            gap: 0.35em;
+        }
+    }
+}
