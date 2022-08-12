@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <title>ID Camp - SecondExam</title>
+    </head>
+    <body>
+        <section class="search">
+            <input type="search" name="search" id="searchBar" placeholder="Search for books ..." class="box" />
+            <img src="assets/Search.svg" class="icon" />
+        </section>
+        <div class="middle">
+            <section class="input">
+                <h2 class="title">Add new books</h2>
+                <form id="form" class="formGroup">
+                    <input type="text" name="title" id="title" placeholder="Judul buku" class="box" required />
+                    <input type="text" name="author" id="author" placeholder="Author" class="box" required />
+                    <input type="date" name="date" id="date" class="box" required />
+                    <input type="submit" value="submit" id="submitBtn" placeholder="Add book" class="box submitbox" />
+                </form>
+            </section>
+            <section class="notRead">
+                <h2 class="title">Books to read</h2>
+                <div id="notread">
+                <!--Placeholder for the DOM to render things-->
+                    <div class="books">
+                        <h3>The ultimate Paradigm</h3>
+                        <p>Some old guy in the west</p>
+                        <p>2022</p>
+                        <button class="box submitbox">Mark as done</button>
+                    </div>
+                    <div class="books">
+                        <h3>The ultimate Paradigm</h3>
+                        <p>Some old guy in the west</p>
+                        <p>2022</p>
+                        <button class="box submitbox">Mark as done</button>
+                    </div>
+                    <div class="books">
+                        <h3>The ultimate Paradigm</h3>
+                        <p>Some old guy in the west</p>
+                        <p>2022</p>
+                        <button class="box submitbox">Mark as done</button>
+                    </div>
+                </div>
+            </section>
+            <section class="doneRead">
+                <h2 class="title">Books you've read</h2>
+                <div id="read">
+                <!--Placeholder for the DOM to render things-->
+                    <div class="books">
+                        <h3>The ultimate Paradigm</h3>
+                        <p>Some old guy in the west</p>
+                        <p>2022</p>
+                        <div class="buttonGroup">
+                            <button class="box submitbox">Mark as Undone</button>
+                            <button class="box submitbox warn">Delete this book</button>
+                        </div>
+                    </div>
+                    <div class="books">
+                        <h3>The ultimate Paradigm</h3>
+                        <p>Some old guy in the west</p>
+                        <p>2022</p>
+                        <div class="buttonGroup">
+                            <button class="box submitbox">Mark as Undone</button>
+                            <button class="box submitbox warn">Delete this book</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
