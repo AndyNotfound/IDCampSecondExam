@@ -1,5 +1,14 @@
 const bookShelf = [];
 const RENDER = 'render_book'
+const BOOK_CACHE = 'cache_book_saved'
+
+function checkStorage (){
+    if(typeof(Storage) === undefined){
+        alert('Browser anda tidak mendukung local storage, semua data akan terhapus ketika reload!');
+        return false;
+    }
+    return true;
+}
 
 function generateObject (id, title, author, year, stats){
     return {
@@ -15,7 +24,7 @@ function generateId(){
     return +new Date();
 }
 
-function findItem (itemId) {
+function findItem (itemId){
     for (let book of bookShelf){
         if (itemId == book.id){
             return book;
@@ -29,6 +38,7 @@ function markDoneEvent(bookId){
     item.stats = true;
     if (item == null) return;
     document.dispatchEvent(new Event(RENDER));
+    saveBookToLocal();
 }
 
 function markUndoneEvent(bookId){
@@ -36,6 +46,7 @@ function markUndoneEvent(bookId){
     item.stats = false;
     if (item == null) return;
     document.dispatchEvent(new Event(RENDER));
+    saveBookToLocal();
 }
 
 function deleteBookEvent (bookId){
@@ -45,6 +56,7 @@ function deleteBookEvent (bookId){
         }
     }
     document.dispatchEvent(new Event(RENDER));
+    saveBookToLocal();
 }
 
 function addBook (){
@@ -57,6 +69,7 @@ function addBook (){
     bookShelf.push(bookObject);
 
     document.dispatchEvent(new Event(RENDER));
+    saveBookToLocal();
 }
 
 function bookItem(bookObject){
@@ -106,6 +119,25 @@ function bookItem(bookObject){
     return container;
 }
 
+function saveBookToLocal (){
+    if (checkStorage()){
+        const parsedData = JSON.stringify(bookShelf);
+        localStorage.setItem(BOOK_CACHE, parsedData);
+    }
+}
+
+function loadLocalData (){
+    if (checkStorage()){
+        const data = localStorage.getItem(BOOK_CACHE);
+        const bookCache = JSON.parse(data);
+        if (bookCache !== null){
+            for (let book of bookCache){
+                bookShelf.push(book);
+            }
+        }
+        document.dispatchEvent(new Event(RENDER));
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('form');
@@ -113,6 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         addBook();
     })
+    if(checkStorage()){
+        loadLocalData();
+    }
 })
 
 document.addEventListener(RENDER, () => {
