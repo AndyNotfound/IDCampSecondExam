@@ -212,7 +212,8 @@ body {
     width: 35%;
   }
 }
-.middle .doneRead .buttonGroup {
+
+.buttonGroup {
   display: flex;
   flex-direction: column;
   gap: 0.35em;

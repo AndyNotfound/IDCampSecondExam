@@ -19,7 +19,7 @@ body{
     text-transform: capitalize;
 }
 
-.box{
+.box{ 
     font-size: 1em;
     padding: 0 1em 0 1em;
     text-indent: 10px;
@@ -142,10 +142,11 @@ body{
         @include desktop{
             width: 35%;
         }
-        .buttonGroup{
-            display: flex;
-            flex-direction: column;
-            gap: 0.35em;
-        }
     }
+}
+
+.buttonGroup{
+    display: flex;
+    flex-direction: column;
+    gap: 0.35em;
 }
