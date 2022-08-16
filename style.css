@@ -133,6 +133,7 @@ body {
   width: calc(90% - 2em);
   margin: 2em auto;
   display: flex;
+  flex-direction: column;
   gap: 0.5em;
   align-items: center;
   position: relative;
@@ -150,9 +151,16 @@ body {
 .search .icon {
   position: absolute;
   left: 10px;
+  top: 8px;
   width: 30px;
   height: 30px;
   aspect-ratio: 1;
+}
+.search .searchResultContainer {
+  width: 100%;
+}
+.search .searchResultContainer > .books > .buttonGroup > .box {
+  text-indent: 0;
 }
 
 .middle {
@@ -217,4 +225,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.35em;
+}
+
+.noResult {
+  width: 100%;
+  padding: 1em;
+  border-radius: 0.2em;
+  margin: 1em auto;
 }/*# sourceMappingURL=style.css.map */

@@ -10,13 +10,13 @@ function checkStorage (){
     return true;
 }
 
-function generateObject (id, title, author, year, stats){
+function generateObject (id, title, author, year, isComplete){
     return {
         id,
         title,
         author,
         year,
-        stats
+        isComplete
     }
 }
 
@@ -35,7 +35,7 @@ function findItem (itemId){
 
 function markDoneEvent(bookId){
     const item = findItem(bookId);
-    item.stats = true;
+    item.isComplete = true;
     if (item == null) return;
     document.dispatchEvent(new Event(RENDER));
     saveBookToLocal();
@@ -43,7 +43,7 @@ function markDoneEvent(bookId){
 
 function markUndoneEvent(bookId){
     const item = findItem(bookId);
-    item.stats = false;
+    item.isComplete = false;
     if (item == null) return;
     document.dispatchEvent(new Event(RENDER));
     saveBookToLocal();
@@ -64,10 +64,8 @@ function addBook (){
     const author = document.getElementById('author').value;
     const year = document.getElementById('date').value;
     const generateID = generateId();
-
     const bookObject = generateObject(generateID, title, author, year, false); 
     bookShelf.push(bookObject);
-
     document.dispatchEvent(new Event(RENDER));
     saveBookToLocal();
 }
@@ -82,21 +80,23 @@ function bookItem(bookObject){
     author.innerText = bookObject.author;
     const year = document.createElement('p');
     year.innerText = bookObject.year;
-
     container.append(title, author, year);
-
     const buttonContainer = document.createElement('div');
     buttonContainer.setAttribute('class', 'buttonGroup');
-
-    if(!bookObject.stats){
+    const deleteBook = document.createElement('button');
+    deleteBook.setAttribute('class', 'box submitbox warn');
+    deleteBook.innerText = 'Delete this book'
+    deleteBook.addEventListener('click', () => {
+        deleteBookEvent(bookObject.id);
+    })
+    if(!bookObject.isComplete){
         const markDone = document.createElement('button');
         markDone.setAttribute('class', 'box submitbox');
         markDone.innerText = 'Mark as done'
         markDone.addEventListener('click', () => {
             markDoneEvent(bookObject.id);
         })
-
-        buttonContainer.append(markDone);
+        buttonContainer.append(markDone, deleteBook);
     } else {
         const markUndone = document.createElement('button');
         markUndone.setAttribute('class', 'box submitbox');
@@ -104,17 +104,8 @@ function bookItem(bookObject){
         markUndone.addEventListener('click', () => {
             markUndoneEvent(bookObject.id);
         })
-
-        const deleteBook = document.createElement('button');
-        deleteBook.setAttribute('class', 'box submitbox warn');
-        deleteBook.innerText = 'Delete this book'
-        deleteBook.addEventListener('click', () => {
-            deleteBookEvent(bookObject.id);
-        })
-
         buttonContainer.append(markUndone, deleteBook);
     }
-
     container.append(buttonContainer);
     return container;
 }
@@ -155,13 +146,78 @@ document.addEventListener(RENDER, () => {
     read.innerHTML = '';
     const unread = document.getElementById('notread');
     unread.innerHTML = '';
-
     for (let book of bookShelf){
-        let bookFromShelf = bookItem(book);
-        if(!book.stats){
-            unread.append(bookFromShelf);
+        let bookToShelf = bookItem(book);
+        if(!book.isComplete){
+            unread.append(bookToShelf);
         } else {
-            read.append(bookFromShelf);
+            read.append(bookToShelf);
         }
+    }
+})
+
+const searchList = bookShelf;
+const searchBar = document.getElementById('searchBar');
+const searchResultList = document.getElementById('searchResult');
+
+function searchRelevance (bookTitle, searchTerm){
+    let relevance;
+    if (bookTitle === searchTerm){
+        relevance = 2;
+    } else if (bookTitle.startsWith(searchTerm)){
+        relevance = 1;
+    } else if(bookTitle.includes(searchTerm)){
+        relevance = 0;
+    } else {
+        relevance = -1;
+    }
+    return relevance;
+}
+
+function clearList (elem){
+    while (elem.firstChild){
+        elem.removeChild(elem.firstChild);
+    }
+}
+
+function noSearchResult (){
+    const noResultWrapper = document.createElement('div');
+    noResultWrapper.setAttribute('class', 'noResult');
+    const notFoundErrMsg = document.createElement('p');
+    notFoundErrMsg.innerText = 'Sorry, No result can be found!';
+    noResultWrapper.append(notFoundErrMsg);
+    return noResultWrapper;
+}
+
+function setList (bookSearchResult){
+    clearList(searchResultList);
+    if (bookSearchResult.length !== 0) {
+        for (let searchResult of bookSearchResult){
+            const listItem = document.createElement('li');
+            const bookElem = bookItem(searchResult);
+            const bookListElem = listItem.appendChild(bookElem);
+            searchResultList.append(bookListElem);
+        }
+    } else {
+        const noResult = noSearchResult();
+        searchResultList.append(noResult);
+    }
+}
+
+searchBar.addEventListener('keyup', e => {
+    const notResultWrapper = document.getElementById('wrapper');
+    clearList(notResultWrapper);
+    const searchQuery = e.target.value.toLowerCase().replace(/^\s+|\s+$/gm,'');
+    if (searchQuery.length > 0){
+        setList(searchList.filter(book => {
+            const bookTitle = book.title.toLowerCase().replace(/^\s+|\s+$/gm,'');
+            if(bookTitle.includes(searchQuery)){
+                return book;
+            }
+        }).sort((a, b) => {
+            return searchRelevance(a.title, searchQuery) - searchRelevance(b.title, searchQuery);
+        }));
+    } else {
+        clearList(searchResultList);
     }
 })
