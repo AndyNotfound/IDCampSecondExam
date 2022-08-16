@@ -33,6 +33,24 @@ function findItem (itemId){
     return null;
 }
 
+function askConfirmation(bookId){
+    const modalWindow = document.getElementById('modalPlaceholder');
+    const modal = document.getElementById('modal');
+    modalWindow.classList.add('active');
+    modal.classList.add('active');
+    const cancel = document.getElementById('cancelDelete');
+    cancel.addEventListener('click', () => {
+        modalWindow.classList.remove('active');
+        modal.classList.remove('active');
+    })
+    const confirm = document.getElementById('confirmDelete')
+    confirm.addEventListener('click', () => {
+        deleteBookEvent(bookId);
+        modalWindow.classList.remove('active');
+        modal.classList.remove('active');
+    })
+}
+
 function markDoneEvent(bookId){
     const item = findItem(bookId);
     item.isComplete = true;
@@ -87,7 +105,7 @@ function bookItem(bookObject){
     deleteBook.setAttribute('class', 'box submitbox warn');
     deleteBook.innerText = 'Delete this book'
     deleteBook.addEventListener('click', () => {
-        deleteBookEvent(bookObject.id);
+        askConfirmation(bookObject.id);
     })
     if(!bookObject.isComplete){
         const markDone = document.createElement('button');

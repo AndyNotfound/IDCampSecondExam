@@ -15,19 +15,7 @@
             <input type="search" name="search" id="searchBar" placeholder="Search for books ..." class="box" />
             <img src="assets/Search.svg" class="icon" />
             <ul id="searchResult" class="searchResultContainer">
-                    <!-- 
-                <li>
-                    <div class="books">
-                        <h3>The ultimate Paradigm</h3>
-                        <p>Some old guy in the west</p>
-                        <p>2022</p>
-                        <div class="buttonGroup">
-                            <button class="box submitbox">Mark as done</button>
-                            <button class="box submitbox warn">Mark as undone</button>
-                        </div>
-                    </div>
-                </li> -->
-            </ul>
+                <!--Placeholder for the DOM to render things-->
             </ul>
         </section>
         <div class="middle" id="wrapper">
@@ -43,15 +31,24 @@
             <section class="notRead">
                 <h2 class="title">Books to read</h2>
                 <div id="notread">
-                <!--Placeholder for the DOM to render things-->
+                    <!--Placeholder for the DOM to render things-->
                 </div>
             </section>
             <section class="doneRead">
                 <h2 class="title">Books you've read</h2>
                 <div id="read">
-                <!--Placeholder for the DOM to render things-->
+                    <!--Placeholder for the DOM to render things-->
                 </div>
             </section>
+        </div>
+        <div class="modalPlaceholder" id="modalPlaceholder">
+            <div class="modal" id="modal">
+                <p>Are you sure to delete this book?</p>
+                <div class="buttonGroup">
+                    <button class="box submitbox" id="cancelDelete">Cancel</button>
+                    <button class="box submitbox warn" id="confirmDelete">Yes</button>
+                </div>
+            </div>
         </div>
         <script src="script.js"></script>
     </body>

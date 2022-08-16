@@ -232,4 +232,38 @@ body {
   padding: 1em;
   border-radius: 0.2em;
   margin: 1em auto;
+}
+
+.modalPlaceholder.active {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7019607843);
+  top: 0;
+  bottom: 0;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  display: none;
+}
+
+.modal.active {
+  background-color: #2F4858;
+  color: #FFFFFF;
+  border-radius: 0.2em;
+  padding: 1.5em 2em;
+  width: 30vw;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+.modal.active .buttonGroup {
+  flex-direction: row;
+}
+.modal.active .buttonGroup .box {
+  width: 50%;
 }/*# sourceMappingURL=style.css.map */

@@ -165,3 +165,37 @@ body{
     border-radius: 0.2em;
     margin: 1em auto;
 }
+
+.modalPlaceholder.active {
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000B3;
+    top: 0;
+    bottom: 0;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal{
+    display: none;
+}
+
+.modal.active{
+    background-color: #2F4858;
+    color: $white;
+    border-radius: 0.2em;
+    padding: 1.5em 2em;
+    width: 30vw;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    .buttonGroup{
+        flex-direction: row;
+        .box{
+            width: 50%;
+        }
+    }
+}
