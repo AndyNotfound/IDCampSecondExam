@@ -1,6 +1,7 @@
 const bookShelf = [];
 const RENDER = 'render_book'
 const BOOK_CACHE = 'cache_book_saved'
+const modalWindow = document.getElementById('modalPlaceholder');
 
 function checkStorage (){
     if(typeof(Storage) === undefined){
@@ -33,23 +34,6 @@ function findItem (itemId){
     return null;
 }
 
-function askConfirmation(bookId){
-    const modalWindow = document.getElementById('modalPlaceholder');
-    const modal = document.getElementById('modal');
-    modalWindow.classList.add('active');
-    modal.classList.add('active');
-    const cancel = document.getElementById('cancelDelete');
-    cancel.addEventListener('click', () => {
-        modalWindow.classList.remove('active');
-        modal.classList.remove('active');
-    })
-    const confirm = document.getElementById('confirmDelete')
-    confirm.addEventListener('click', () => {
-        deleteBookEvent(bookId);
-        modalWindow.classList.remove('active');
-        modal.classList.remove('active');
-    })
-}
 
 function markDoneEvent(bookId){
     const item = findItem(bookId);
@@ -73,6 +57,14 @@ function deleteBookEvent (bookId){
             bookShelf.splice(i, 1)
         }
     }
+    document.dispatchEvent(new Event(RENDER));
+    saveBookToLocal();
+}
+
+function editBookEvent (bookId){
+    const item = findItem(bookId);
+    editModal(item);
+
     document.dispatchEvent(new Event(RENDER));
     saveBookToLocal();
 }
@@ -103,9 +95,15 @@ function bookItem(bookObject){
     buttonContainer.setAttribute('class', 'buttonGroup');
     const deleteBook = document.createElement('button');
     deleteBook.setAttribute('class', 'box submitbox warn');
-    deleteBook.innerText = 'Delete this book'
+    deleteBook.innerText = 'Delete this book';
     deleteBook.addEventListener('click', () => {
-        askConfirmation(bookObject.id);
+        askDeleteConfirmation(bookObject.id);
+    })
+    const editButton = document.createElement('button');
+    editButton.setAttribute('class', 'edit');
+    editButton.innerHTML = '<img src="assets/Edit.svg" />';
+    editButton.addEventListener('click', () => {
+        editBookEvent(bookObject.id);
     })
     if(!bookObject.isComplete){
         const markDone = document.createElement('button');
@@ -114,7 +112,7 @@ function bookItem(bookObject){
         markDone.addEventListener('click', () => {
             markDoneEvent(bookObject.id);
         })
-        buttonContainer.append(markDone, deleteBook);
+        buttonContainer.append(markDone, deleteBook, editButton);
     } else {
         const markUndone = document.createElement('button');
         markUndone.setAttribute('class', 'box submitbox');
@@ -122,10 +120,85 @@ function bookItem(bookObject){
         markUndone.addEventListener('click', () => {
             markUndoneEvent(bookObject.id);
         })
-        buttonContainer.append(markUndone, deleteBook);
+        buttonContainer.append(markUndone, deleteBook, editButton);
     }
     container.append(buttonContainer);
     return container;
+}
+
+const cancelButton = document.createElement('button');
+cancelButton.setAttribute('class', 'box submitbox');
+cancelButton.innerText = 'Cancel';
+cancelButton.addEventListener('click', () => {
+    modalWindow.classList.remove('active');
+    clearList(modalWindow);
+})
+
+function askDeleteConfirmation(bookId){
+    modalWindow.classList.add('active');
+    const delModalContainer = document.createElement('div');
+    delModalContainer.setAttribute('class', 'delModal');
+    const delQuestion = document.createElement('p');
+    delQuestion.innerText = 'Are you sure to delete this book?';
+    const confirmDelButton = document.createElement('button');
+    confirmDelButton.setAttribute('class', 'box submitbox warn');
+    confirmDelButton.innerText = 'Yes';
+    const confirmDelButtonContainer =  document.createElement('div');
+    confirmDelButtonContainer.setAttribute('class', 'buttonGroup');
+    confirmDelButtonContainer.append(cancelButton, confirmDelButton);
+    delModalContainer.append(delQuestion, confirmDelButtonContainer);
+    modalWindow.append(delModalContainer);
+    confirmDelButton.addEventListener('click', () => {
+        deleteBookEvent(bookId);
+        modalWindow.classList.remove('active');
+        clearList(modalWindow);
+    })
+}
+
+function editModal(bookToEdit){
+    modalWindow.classList.add('active');
+    const editForm = document.createElement('form');
+    editForm.setAttribute('class', 'formGroup editModal');
+    const editTitle = document.createElement('input');
+    editTitle.setAttribute('type', 'text');
+    editTitle.setAttribute('class', 'box');
+    editTitle.setAttribute('placeholder', `${bookToEdit.title}`);
+    const editAuthor = document.createElement('input');
+    editAuthor.setAttribute('type', 'text');
+    editAuthor.setAttribute('class', 'box');
+    editAuthor.setAttribute('placeholder', `${bookToEdit.author}`);
+    const editYear = document.createElement('input');
+    editYear.setAttribute('type', 'number');
+    editYear.setAttribute('class', 'box');
+    editYear.setAttribute('placeholder', `${bookToEdit.year}`);
+    const confirmEditButton = document.createElement('button');
+    confirmEditButton.setAttribute('class', 'box submitbox warn');
+    confirmEditButton.innerText = 'Edit';
+    const confirmEditButtonContainer =  document.createElement('div');
+    confirmEditButtonContainer.setAttribute('class', 'buttonGroup');
+    confirmEditButtonContainer.append(cancelButton, confirmEditButton);
+    editForm.append(editTitle, editAuthor, editYear, confirmEditButtonContainer);
+    modalWindow.append(editForm);
+    editForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        confirmEditButton.addEventListener('click', () => {
+            let editedTitle, editedAuthor, editedYear;
+            const newId = generateId();
+            editTitle.value.length > 0 ? editedTitle = editTitle.value : editedTitle = bookToEdit.title;
+            editAuthor.value.length > 0 ? editedAuthor = editAuthor.value : editedAuthor = bookToEdit.author;
+            editYear.value.length > 0 ? editedYear =  editYear.value : editedYear = bookToEdit.year;
+            const state = bookToEdit.isComplete;
+            for(let i in bookShelf){
+                if (bookShelf[i].id == bookToEdit.id){
+                    bookShelf.splice(i, 1, generateObject(newId, editedTitle, editedAuthor, editedYear, state));
+                }
+            }
+            modalWindow.classList.remove('active');
+            clearList(modalWindow);
+            document.dispatchEvent(new Event(RENDER));
+            saveBookToLocal();
+        })
+    })
 }
 
 function saveBookToLocal (){

@@ -50,6 +50,7 @@ body{
 
 
 .books{
+    position: relative;
     padding: 1.5em 1em 1em 1em;
     margin: 0 auto 1em auto;
     border: 1px solid $smoke;
@@ -125,11 +126,6 @@ body{
         @include desktop{
             width: 30%;
         }
-        .formGroup{
-            display: flex;
-            flex-direction: column;
-            gap: 1em;
-        }
     }
     .notRead{
         padding: 1em;
@@ -153,6 +149,19 @@ body{
     }
 }
 
+.formGroup{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.formGroup.editModal{
+    width: 90vw;
+    @include desktop{
+        width: 25vw;
+    }
+}
+
 .buttonGroup{
     display: flex;
     flex-direction: column;
@@ -166,7 +175,11 @@ body{
     margin: 1em auto;
 }
 
-.modalPlaceholder.active {
+.modalPlaceholder{
+    display: none;
+}
+
+.modalPlaceholder.active{
     width: 100vw;
     height: 100vh;
     background-color: #000000B3;
@@ -178,24 +191,34 @@ body{
     align-items: center;
 }
 
-.modal{
-    display: none;
-}
-
-.modal.active{
+.delModal{
     background-color: #2F4858;
     color: $white;
     border-radius: 0.2em;
     padding: 1.5em 2em;
-    width: 30vw;
-    height: 150px;
+    width: 90vw;
     display: flex;
     flex-direction: column;
     gap: 2em;
+    @include desktop{
+        width: 30vw;
+    }
     .buttonGroup{
         flex-direction: row;
         .box{
             width: 50%;
         }
     }
+}
+
+.edit{
+    position: absolute;
+    top: 1em;
+    right: 1em;
+}
+
+.edit > img{
+    width: 20px;
+    height: 20px;
+    aspect-ratio: 1;
 }
