@@ -2,6 +2,9 @@ const bookShelf = [];
 const RENDER = 'render_book'
 const BOOK_CACHE = 'cache_book_saved'
 const modalWindow = document.getElementById('modalPlaceholder');
+const inputPlaceholder = document.getElementById('inputPlaceholder')
+const notReadPlaceholder = document.getElementById('notReadPlaceholder');
+const doneReadPlaceHolder = document.getElementById('doneReadPlaceholder');
 
 function checkStorage (){
     if(typeof(Storage) === undefined){
@@ -64,7 +67,6 @@ function deleteBookEvent (bookId){
 function editBookEvent (bookId){
     const item = findItem(bookId);
     editModal(item);
-
     document.dispatchEvent(new Event(RENDER));
     saveBookToLocal();
 }
@@ -182,12 +184,12 @@ function editModal(bookToEdit){
     editForm.addEventListener('submit', (e) => {
         e.preventDefault();
         confirmEditButton.addEventListener('click', () => {
-            let editedTitle, editedAuthor, editedYear;
             const newId = generateId();
+            const state = bookToEdit.isComplete;
+            let editedTitle, editedAuthor, editedYear;
             editTitle.value.length > 0 ? editedTitle = editTitle.value : editedTitle = bookToEdit.title;
             editAuthor.value.length > 0 ? editedAuthor = editAuthor.value : editedAuthor = bookToEdit.author;
             editYear.value.length > 0 ? editedYear =  editYear.value : editedYear = bookToEdit.year;
-            const state = bookToEdit.isComplete;
             for(let i in bookShelf){
                 if (bookShelf[i].id == bookToEdit.id){
                     bookShelf.splice(i, 1, generateObject(newId, editedTitle, editedAuthor, editedYear, state));
@@ -297,9 +299,9 @@ function setList (bookSearchResult){
 
 searchBar.addEventListener('keyup', e => {
     const notResultWrapper = document.getElementById('wrapper');
-    clearList(notResultWrapper);
     const searchQuery = e.target.value.toLowerCase().replace(/^\s+|\s+$/gm,'');
     if (searchQuery.length > 0){
+        clearList(notResultWrapper);
         setList(searchList.filter(book => {
             const bookTitle = book.title.toLowerCase().replace(/^\s+|\s+$/gm,'');
             if(bookTitle.includes(searchQuery)){
@@ -310,5 +312,6 @@ searchBar.addEventListener('keyup', e => {
         }));
     } else {
         clearList(searchResultList);
+        notResultWrapper.append(inputPlaceholder, notReadPlaceholder, doneReadPlaceHolder);
     }
 })
